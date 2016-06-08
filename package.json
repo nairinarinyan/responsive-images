@@ -11,6 +11,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nairinarinyan/responsive-images"
+  },
   "author": "Nairi Narinyan",
   "license": "ISC"
 }
