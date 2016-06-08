@@ -1,0 +1,16 @@
+{
+  "name": "responsive-images",
+  "version": "0.0.1",
+  "description": "Responsive image generator",
+  "main": "bin/responsive-images.js",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "sharp": "^0.15.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Nairi Narinyan",
+  "license": "ISC"
+}
