@@ -7,14 +7,17 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
+console.log('foo');
+
 let formats = ['.jpg', '.png', '.webp', '.gif', '.svg', '.tiff'];
 let sizes = [400, 800, 1600];
+let imageName, imageDir, defaultDir;
 
 program
     .version('0.0.1')
     .option('-i, --image <path>', 'image to resize') 
     .option('-d, --dir <path>', 'directory of images') 
-    .option('-s, --sizes [sizes]', 'desired sizes. Defaults are 400, 800, 1600', sizes) 
+    .option('-s, --sizes [sizes]', 'desired sizes. Defaults are 400, 800, 1600') 
     .option('-o, --out [path]', 'output directory') 
     .parse(process.argv);
 
@@ -26,6 +29,21 @@ if (!program.image && !program.dir) {
 if (program.image && program.dir) {
     console.error('(As of now) You can\'t provide both image and dir paths');
     process.exit(1);
+}
+
+if (program.image) {
+	let parsedFile = path.parse(path.resolve(program.image));
+    imageName = parsedFile.base;
+    imageDir = parsedFile.dir; 
+}
+
+if ((program.dir || program.image) && !program.out) {
+    let dir = program.dir || path.dirname(program.image);
+
+    let exists = fs.readdirSync(path.resolve(dir));
+    if (!exists)
+        fs.mkdir(path.resolve(dir, 'resized'));
+    defaultDir = path.resolve(dir, 'resized');
 }
 
 if (program.sizes) {
@@ -48,6 +66,7 @@ function processImage(image, dir, out) {
 					console.error(e);
 					process.exit(1);
 				}
+                console.log('Successfully converted %s', output);
 			});
 	});
 }
@@ -64,5 +83,6 @@ function includes(array, fileName) {
     return array.includes ? array.includes(extName) : ~a.indexOf(extName);
 }
 
-program.image && processImage(program.image, program.out || __dirname);
-program.dir && processDir(program.dir, program.out || __dirname);
+program.image && processImage(program.image, imageDir, defaultDir);
+program.dir && processDir(program.dir, program.out || defaultDir);
+
